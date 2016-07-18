@@ -149,12 +149,12 @@ int main( int argc, char* argv[] )
                 args.hostname = argv[ arg + 1 ];
                 arg++;
             }
-            else if( strcmp( "-fp", argv[arg] ) == 0 || strcmp( "--first-port", argv[arg] ) == 0 )
+            else if( strcmp( "-f", argv[arg] ) == 0 || strcmp( "--first-port", argv[arg] ) == 0 )
             {
                 args.first_port = atoi(argv[ arg + 1 ] );
                 arg++;
             }
-            else if( strcmp( "-lp", argv[arg] ) == 0 || strcmp( "--last-port", argv[arg] ) == 0 )
+            else if( strcmp( "-l", argv[arg] ) == 0 || strcmp( "--last-port", argv[arg] ) == 0 )
             {
                 args.last_port = atoi(argv[ arg + 1 ] );
                 arg++;
@@ -515,17 +515,17 @@ void about( int argc, char* argv[] )
 
     console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "Usage:" );
     printf( "\n" );
-    console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "    %s -h <hostname> [-fp <first-port> -lp <last-port> -t <connection-timeout>]", argv[0] );
+    console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "    %s -h <hostname> [-f <first-port> -l <last-port> -t <connection-timeout>]", argv[0] );
     printf( "\n\n" );
 
     console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "Command Line Options:" );
     printf( "\n" );
-    console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "    %-2s, %-12s  %-50s", "-h", "--hostname", "The host to scan." );
+    console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "    %-2s, %-12s   %-50s", "-h", "--hostname", "The host to scan." );
     printf( "\n" );
-    console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "    %-2s, %-12s  %-50s", "-fp", "--first-port", "Start scanning from this port. Default is 1" );
+    console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "    %-2s, %-12s   %-50s", "-f", "--first-port", "Start scanning from this port. Default is 1" );
     printf( "\n" );
-    console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "    %-2s, %-12s  %-50s", "-lp", "--last-port", "The last port to scan. Default is 1024." );
+    console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "    %-2s, %-12s   %-50s", "-l", "--last-port", "The last port to scan. Default is 1024." );
     printf( "\n" );
-    console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "    %-2s, %-12s  %-50s", "-t", "--timeout", "Sets the connection timeout." );
+    console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "    %-2s, %-12s   %-50s", "-t", "--timeout", "Sets the connection timeout." );
     printf( "\n\n" );
 }
