@@ -192,7 +192,7 @@ int main( int argc, char* argv[] )
 
     args.current_port = args.first_port;
 
-    vector_create( args.connection_info, args.last_port - args.first_port + 1 );
+    lc_vector_create( args.connection_info, args.last_port - args.first_port + 1 );
 
     console_fg_color_256( stdout, 0x19 );
     printf( " __________.__                     _________\n" );
@@ -241,13 +241,13 @@ int main( int argc, char* argv[] )
 
     printf( "\n" );
 
-    console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "Found %d ports open.", vector_size(args.connection_info) ); printf( "\n\n" );
+    console_text_faderf( stdout, TEXT_FADER_BLUE_BEEP, "Found %d ports open.", lc_vector_size(args.connection_info) ); printf( "\n\n" );
 
 
     console_text_fader( stdout, TEXT_FADER_BLUE_BEEP, "PORT     DESC" ); printf( "\n" );
     console_text_fader( stdout, TEXT_FADER_BLUE_BEEP, "-----    ---------" ); printf( "\n" );
 
-    for( int i = 0; i < vector_size(args.connection_info); i++ )
+    for( int i = 0; i < lc_vector_size(args.connection_info); i++ )
     {
         connection_info_t* info = &args.connection_info[ i ];
 
@@ -257,7 +257,7 @@ int main( int argc, char* argv[] )
         printf( "\n" );
     }
 
-    vector_destroy( args.connection_info );
+    lc_vector_destroy( args.connection_info );
     printf( "\n" );
 
     return 0;
@@ -464,7 +464,7 @@ bool port_scanning_task( int* percent, void* data )
             recv( sock, info.recv_buffer, sizeof(info.recv_buffer) - 1, 0 );
             info.recv_buffer[ sizeof(info.recv_buffer) - 1 ] = '\0';
 
-            vector_push( args->connection_info, info );
+            lc_vector_push( args->connection_info, info );
         }
     }
 
