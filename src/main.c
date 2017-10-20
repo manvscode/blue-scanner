@@ -23,6 +23,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <signal.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -146,23 +148,71 @@ int main( int argc, char* argv[] )
         {
             if( strcmp( "-h", argv[arg] ) == 0 || strcmp( "--host", argv[arg] ) == 0 )
             {
-                args.hostname = argv[ arg + 1 ];
-                arg++;
+				if( (arg + 1) < argc )
+				{
+					args.hostname = argv[ arg + 1 ];
+					arg++;
+				}
+				else
+				{
+					console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+					fprintf( stderr, "ERROR: " );
+					console_reset( stderr );
+					fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
+					about( argc, argv );
+					return -2;
+				}
             }
             else if( strcmp( "-f", argv[arg] ) == 0 || strcmp( "--first-port", argv[arg] ) == 0 )
             {
-                args.first_port = atoi(argv[ arg + 1 ] );
-                arg++;
+				if( (arg + 1) < argc )
+				{
+					args.first_port = atoi(argv[ arg + 1 ] );
+					arg++;
+				}
+				else
+				{
+					console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+					fprintf( stderr, "ERROR: " );
+					console_reset( stderr );
+					fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
+					about( argc, argv );
+					return -2;
+				}
             }
             else if( strcmp( "-l", argv[arg] ) == 0 || strcmp( "--last-port", argv[arg] ) == 0 )
             {
-                args.last_port = atoi(argv[ arg + 1 ] );
-                arg++;
+				if( (arg + 1) < argc )
+				{
+					args.last_port = atoi(argv[ arg + 1 ] );
+					arg++;
+				}
+				else
+				{
+					console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+					fprintf( stderr, "ERROR: " );
+					console_reset( stderr );
+					fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
+					about( argc, argv );
+					return -2;
+				}
             }
             else if( strcmp( "-t", argv[arg] ) == 0 || strcmp( "--timeout", argv[arg] ) == 0 )
             {
-                args.connection_to = atoi(argv[ arg + 1 ]);
-                arg++;
+				if( (arg + 1) < argc )
+				{
+					args.connection_to = atoi(argv[ arg + 1 ]);
+					arg++;
+				}
+				else
+				{
+					console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+					fprintf( stderr, "ERROR: " );
+					console_reset( stderr );
+					fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
+					about( argc, argv );
+					return -2;
+				}
             }
             else
             {
@@ -269,7 +319,8 @@ bool address_resolve( const char* hostname, int* protocol_family, struct sockadd
     struct addrinfo* gai_result = NULL;
 
     struct addrinfo hints = { 0 };
-    //memset( &hints, 0, sizeof(hints) );
+    //struct addrinfo hints;
+    memset( &hints, 0, sizeof(hints) );
     hints.ai_family   = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 
