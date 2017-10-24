@@ -4,9 +4,7 @@ A port scanner with attitude.
 
 ----------
 
-## Online Demo
-
-[Demo on YouTube](https://www.youtube.com/watch?v=Kxe0FcfpL0c&lc=z23zulixtzrbgvd4r04t1aokgs2vqg41r1a51r3qki0rbk0h00410)
+[![YouTube Video](http://img.youtube.com/vi/Kxe0FcfpL0c/0.jpg)](https://youtu.be/Kxe0FcfpL0c)
 
 ## Donate, if you found this software useful
 
