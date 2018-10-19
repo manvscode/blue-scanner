@@ -1,7 +1,7 @@
 
 CC = gcc
-CFLAGS = -O0 -g -I /usr/local/include -I extern/include/
-#CFLAGS = -std=c99 -O2 -I /usr/local/include -I extern/include/
+#CFLAGS = -O0 -g -Wall -fsanitize=undefined -I /usr/local/include -I extern/include/
+CFLAGS = -O2 -Wall -fsanitize=undefined -I /usr/local/include -I extern/include/
 LDFLAGS = extern/lib/libutility.a extern/lib/libcollections.a -L /usr/local/lib -L extern/lib/ -L extern/libcollections/lib/
 CWD = $(shell pwd)
 BIN_NAME = blue-scanner
