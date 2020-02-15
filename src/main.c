@@ -35,7 +35,7 @@
 #include <libutility/console.h>
 #include <libcollections/vector.h>
 
-#define VERSION "1.0"
+#define VERSION "1.0.0"
 
 static bool address_resolve( const char* hostname, int* protocol_family, struct sockaddr** address, socklen_t* address_length );
 static bool port_scanning_task( int* percent, void* data );
