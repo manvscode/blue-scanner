@@ -25,12 +25,24 @@
 #include <errno.h>
 #include <signal.h>
 #include <sys/time.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <unistd.h>
-#include <fcntl.h>
+
+#if defined(_WIN32) || defined(_WIN64)
+# include <w32api.h>
+# include <winsock2.h>
+# include <ws2tcpip.h>
+# include <windows.h>
+# define close closesocket
+#else // Linux and MacOS X
+# ifndef _POSIX_C_SOURCE
+#  define _POSIX_C_SOURCE=200112L
+# endif
+# include <sys/types.h>
+# include <sys/socket.h>
+# include <arpa/inet.h>
+# include <netdb.h>
+# include <fcntl.h>
+# include <unistd.h>
+#endif
 #include <libutility/utility.h>
 #include <libutility/console.h>
 #include <libcollections/vector.h>
@@ -148,71 +160,71 @@ int main( int argc, char* argv[] )
         {
             if( strcmp( "-h", argv[arg] ) == 0 || strcmp( "--host", argv[arg] ) == 0 )
             {
-				if( (arg + 1) < argc )
-				{
-					args.hostname = argv[ arg + 1 ];
-					arg++;
-				}
-				else
-				{
-					console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
-					fprintf( stderr, "ERROR: " );
-					console_reset( stderr );
-					fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
-					about( argc, argv );
-					return -2;
-				}
+                if( (arg + 1) < argc )
+                {
+                    args.hostname = argv[ arg + 1 ];
+                    arg++;
+                }
+                else
+                {
+                    console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+                    fprintf( stderr, "ERROR: " );
+                    console_reset( stderr );
+                    fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
+                    about( argc, argv );
+                    return -2;
+                }
             }
             else if( strcmp( "-f", argv[arg] ) == 0 || strcmp( "--first-port", argv[arg] ) == 0 )
             {
-				if( (arg + 1) < argc )
-				{
-					args.first_port = atoi(argv[ arg + 1 ] );
-					arg++;
-				}
-				else
-				{
-					console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
-					fprintf( stderr, "ERROR: " );
-					console_reset( stderr );
-					fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
-					about( argc, argv );
-					return -2;
-				}
+                if( (arg + 1) < argc )
+                {
+                    args.first_port = atoi(argv[ arg + 1 ] );
+                    arg++;
+                }
+                else
+                {
+                    console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+                    fprintf( stderr, "ERROR: " );
+                    console_reset( stderr );
+                    fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
+                    about( argc, argv );
+                    return -2;
+                }
             }
             else if( strcmp( "-l", argv[arg] ) == 0 || strcmp( "--last-port", argv[arg] ) == 0 )
             {
-				if( (arg + 1) < argc )
-				{
-					args.last_port = atoi(argv[ arg + 1 ] );
-					arg++;
-				}
-				else
-				{
-					console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
-					fprintf( stderr, "ERROR: " );
-					console_reset( stderr );
-					fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
-					about( argc, argv );
-					return -2;
-				}
+                if( (arg + 1) < argc )
+                {
+                    args.last_port = atoi(argv[ arg + 1 ] );
+                    arg++;
+                }
+                else
+                {
+                    console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+                    fprintf( stderr, "ERROR: " );
+                    console_reset( stderr );
+                    fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
+                    about( argc, argv );
+                    return -2;
+                }
             }
             else if( strcmp( "-t", argv[arg] ) == 0 || strcmp( "--timeout", argv[arg] ) == 0 )
             {
-				if( (arg + 1) < argc )
-				{
-					args.connection_to = atoi(argv[ arg + 1 ]);
-					arg++;
-				}
-				else
-				{
-					console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
-					fprintf( stderr, "ERROR: " );
-					console_reset( stderr );
-					fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
-					about( argc, argv );
-					return -2;
-				}
+                if( (arg + 1) < argc )
+                {
+                    args.connection_to = atoi(argv[ arg + 1 ]);
+                    arg++;
+                }
+                else
+                {
+                    console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+                    fprintf( stderr, "ERROR: " );
+                    console_reset( stderr );
+                    fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
+                    about( argc, argv );
+                    return -2;
+                }
             }
             else
             {
@@ -269,6 +281,7 @@ int main( int argc, char* argv[] )
         char ip_string[ INET6_ADDRSTRLEN ];
         void* addr = (args.protocol_family == PF_INET6 ? (void*)&((struct sockaddr_in6*) args.address)->sin6_addr :
                                              (void*)&((struct sockaddr_in*) args.address)->sin_addr);
+
         if( !inet_ntop( args.protocol_family, addr, ip_string, sizeof(ip_string) ) )
         {
             console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
@@ -405,7 +418,7 @@ bool port_scanning_task( int* percent, void* data )
     }
 
     int so_reuse_addr = 1;
-    if( setsockopt( sock, SOL_SOCKET, SO_REUSEADDR, &so_reuse_addr, sizeof(so_reuse_addr) ) < 0 )
+    if( setsockopt( sock, SOL_SOCKET, SO_REUSEADDR, (void*) &so_reuse_addr, sizeof(so_reuse_addr) ) < 0 )
     {
         console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
         printf( "\n" );
@@ -416,8 +429,9 @@ bool port_scanning_task( int* percent, void* data )
         goto done;
     }
 
+    #if __linux__
     int so_reuse_port = 1;
-    if( setsockopt( sock, SOL_SOCKET, SO_REUSEPORT, &so_reuse_port, sizeof(so_reuse_port) ) < 0 )
+    if( setsockopt( sock, SOL_SOCKET, SO_REUSEPORT, (void*) &so_reuse_port, sizeof(so_reuse_port) ) < 0 )
     {
         console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
         printf( "\n" );
@@ -427,13 +441,14 @@ bool port_scanning_task( int* percent, void* data )
         port_scanned = false;
         goto done;
     }
+    #endif
 
 #if 0
     struct timeval so_receive_timeout = {
         .tv_sec = 0,
         .tv_usec = 1000 * 100,
     };
-    if( setsockopt( sock, SOL_SOCKET, SO_RCVTIMEO, &so_receive_timeout, sizeof(so_receive_timeout) ) < 0 )
+    if( setsockopt( sock, SOL_SOCKET, SO_RCVTIMEO, (void*) &so_receive_timeout, sizeof(so_receive_timeout) ) < 0 )
     {
         console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
         printf( "\n" );
@@ -448,7 +463,7 @@ bool port_scanning_task( int* percent, void* data )
         .tv_sec = 0,
         .tv_usec = 1000 * 100,
     };
-    if( setsockopt( sock, SOL_SOCKET, SO_SNDTIMEO, &so_send_timeout, sizeof(so_send_timeout) ) < 0 )
+    if( setsockopt( sock, SOL_SOCKET, SO_SNDTIMEO, (void*) &so_send_timeout, sizeof(so_send_timeout) ) < 0 )
     {
         console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
         printf( "\n" );
@@ -471,7 +486,9 @@ bool port_scanning_task( int* percent, void* data )
         addr_in->sin_port = htons(args->current_port);
     }
 
+    #if !defined(_WIN32) && !defined(_WIN64)
     fcntl( sock, F_SETFL, O_NONBLOCK );
+    #endif
 
     if( connect( sock, args->address, args->address_length ) < 0 )
     {
@@ -501,12 +518,14 @@ bool port_scanning_task( int* percent, void* data )
         int so_error = 0;
         socklen_t so_error_len = sizeof(so_error);
 
-        getsockopt( sock, SOL_SOCKET, SO_ERROR, &so_error, &so_error_len );
+        getsockopt( sock, SOL_SOCKET, SO_ERROR, (void*) &so_error, &so_error_len );
 
         if( so_error == 0 )
         {
             // TODO: Connection successful.
+            #if !defined(_WIN32) && !defined(_WIN64)
             fcntl( sock, F_SETFL, ~O_NONBLOCK );
+            #endif
 
             connection_info_t info = {
                 .port = args->current_port,

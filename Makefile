@@ -1,10 +1,55 @@
+# To build for Linux:
+# 	make OS=linux
+#
+# To build for Windows i686:
+# 	make OS=windows-i686
+#
+# To build for Windows x86_64:
+# 	make OS=windows-x86_64
+#
+# To install:
+# 	make install INSTALL_PATH=~/bin
+#
 
-CC = gcc
-#CFLAGS = -O0 -g -Wall -fsanitize=undefined -I /usr/local/include -I extern/include/
-CFLAGS = -O2 -Wall -fsanitize=undefined -I /usr/local/include -I extern/include/
-LDFLAGS = extern/lib/libutility.a extern/lib/libcollections.a -L /usr/local/lib -L extern/lib/ -L extern/libcollections/lib/
+ifndef $(OS)
+OS=linux
+endif
+
+ifndef $(DEBUG)
+DEBUG=false
+endif
+
 CWD = $(shell pwd)
+
+ifeq ($(DEBUG), true)
+CFLAGS = -std=c99 -Wall -O0 -g -fsanitize=undefined -I /usr/local/include -I extern/include/
+else
+CFLAGS = -std=c99 -Wall -O2 -I /usr/local/include -I extern/include/
+endif
+
+ifeq ($(OS),linux)
 BIN_NAME = blue-scanner
+CC = gcc
+HOST=
+CFLAGS += -D_POSIX_C_SOURCE=200112L
+LDFLAGS = extern/lib/libutility.a extern/lib/libcollections.a -L /usr/local/lib -L extern/lib/ -L extern/libcollections/lib/
+endif
+
+ifeq ($(OS),windows-i686)
+BIN_NAME = blue-scanner-i686.exe
+CC=i686-w64-mingw32-gcc
+HOST=i686-w64-mingw32
+CFLAGS += -D_POSIX -DWINVER=WindowsVista -D_WIN32_WINDOWS=WindowsVista -D_WIN32_WINNT=WindowsVista
+LDFLAGS = extern/lib/libutility.a extern/lib/libcollections.a -L /usr/local/lib -L extern/lib/ -L extern/libcollections/lib/ -L /usr/i686-w64-mingw32/lib/ -lmingw32 -lmsvcrt -lws2_32
+endif
+
+ifeq ($(OS),windows-x86_64)
+BIN_NAME = blue-scanner-x86_64.exe
+CC=x86_64-w64-mingw32-gcc
+HOST=x86_64-w64-mingw32
+CFLAGS += -D_POSIX -DWINVER=WindowsVista -D_WIN32_WINDOWS=WindowsVista -D_WIN32_WINNT=WindowsVista
+LDFLAGS = extern/lib/libutility.a extern/lib/libcollections.a -L /usr/local/lib -L extern/lib/ -L extern/libcollections/lib/ -L /usr/x86_64-w64-mingw32/lib/ -lmingw32 -lmsvcrt -lws2_32
+endif
 
 SOURCES = src/main.c
 
@@ -26,12 +71,12 @@ src/%.o: src/%.c
 extern/libutility:
 	@mkdir -p extern/libutility/
 	@git clone https://bitbucket.org/manvscode/libutility.git extern/libutility/
-	@cd extern/libutility && autoreconf -i && ./configure --libdir=$(CWD)/extern/lib/ --includedir=$(CWD)/extern/include/ && make && make install
+	@cd extern/libutility && autoreconf -fi && ./configure --libdir=$(CWD)/extern/lib/ --includedir=$(CWD)/extern/include/ --host=$(HOST) && make && make install
 
 extern/libcollections:
 	@mkdir -p extern/libcollections/
 	@git clone https://bitbucket.org/manvscode/libcollections.git extern/libcollections/
-	@cd extern/libcollections && autoreconf -i && ./configure --libdir=$(CWD)/extern/lib/ --includedir=$(CWD)/extern/include/ && make && make install
+	@cd extern/libcollections && autoreconf -fi && ./configure --libdir=$(CWD)/extern/lib/ --includedir=$(CWD)/extern/include/ --host=$(HOST) && make && make install
 
 #################################################
 # Cleaning                                      #
@@ -42,3 +87,13 @@ clean_extern:
 clean:
 	@rm -rf src/*.o
 	@rm -rf bin
+
+#################################################
+# Installing                                    #
+#################################################
+install:
+ifeq ("$(INSTALL_PATH)","")
+	$(error INSTALL_PATH is not set.)
+endif
+	@echo "Installing ${CWD}/bin/${BIN_NAME} to ${INSTALL_PATH}"
+	@cp bin/$(BIN_NAME) $(INSTALL_PATH)/$(BIN_NAME)
