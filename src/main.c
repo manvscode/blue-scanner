@@ -43,9 +43,9 @@
 # include <fcntl.h>
 # include <unistd.h>
 #endif
-#include <libutility/utility.h>
-#include <libutility/console.h>
-#include <libcollections/vector.h>
+#include <utility.h>
+#include <console.h>
+#include <collections/vector.h>
 
 #define VERSION "1.0.0"
 

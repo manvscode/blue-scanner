@@ -24,7 +24,7 @@ CWD = $(shell pwd)
 ifeq ($(DEBUG), true)
 CFLAGS = -std=c99 -Wall -O0 -g -fsanitize=undefined -I /usr/local/include -I extern/include/
 else
-CFLAGS = -std=c99 -Wall -O2 -I /usr/local/include -I extern/include/
+CFLAGS = -std=c99 -Wall -O2 -I /usr/local/include -I extern/include/utility-1.0.0/ -I extern/include/collections-1.0.0/
 endif
 
 ifeq ($(OS),linux)
