@@ -43,8 +43,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 #endif
-#include <utility.h>
-#include <console.h>
+#include <xtd/console.h>
 #include <collections/vector.h>
 
 #define VERSION "1.0.0"
