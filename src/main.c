@@ -166,7 +166,7 @@ int main( int argc, char* argv[] )
                 }
                 else
                 {
-                    console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+                    console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
                     fprintf( stderr, "ERROR: " );
                     console_reset( stderr );
                     fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
@@ -183,7 +183,7 @@ int main( int argc, char* argv[] )
                 }
                 else
                 {
-                    console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+                    console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
                     fprintf( stderr, "ERROR: " );
                     console_reset( stderr );
                     fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
@@ -200,7 +200,7 @@ int main( int argc, char* argv[] )
                 }
                 else
                 {
-                    console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+                    console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
                     fprintf( stderr, "ERROR: " );
                     console_reset( stderr );
                     fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
@@ -217,7 +217,7 @@ int main( int argc, char* argv[] )
                 }
                 else
                 {
-                    console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+                    console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
                     fprintf( stderr, "ERROR: " );
                     console_reset( stderr );
                     fprintf( stderr, "Missing required parameter for '%s' operation.\n", argv[arg] );
@@ -227,7 +227,7 @@ int main( int argc, char* argv[] )
             }
             else
             {
-                console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+                console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
                 printf( "\n" );
                 fprintf( stderr, "ERROR: " );
                 console_reset( stderr );
@@ -240,7 +240,7 @@ int main( int argc, char* argv[] )
 
     if( args.hostname == NULL )
     {
-        console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+        console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
         fprintf( stderr, "ERROR: " );
         console_reset( stderr );
         fprintf( stderr, "Need at least the hostname to scan." );
@@ -255,7 +255,7 @@ int main( int argc, char* argv[] )
 
     lc_vector_create( args.connection_info, args.last_port - args.first_port + 1 );
 
-    console_fg_color_256( stdout, 0x19 );
+    console_fg_color_8( stdout, 0x19 );
     printf( " __________.__                     _________\n" );
     printf( " \\______   \\  |  __ __   ____     /   _____/ ____ _____    ____   ____   ___________ \n" );
     printf( "  |    |  _/  | |  |  \\_/ __ \\    \\_____  \\_/ ___\\\\__  \\  /    \\ /    \\_/ __ \\_  __ \\\n" );
@@ -270,7 +270,7 @@ int main( int argc, char* argv[] )
 
     if( !address_resolve( args.hostname, &args.protocol_family, &args.address, &args.address_length ) )
     {
-        console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+        console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
         fprintf( stderr, "ERROR: " );
         console_reset( stderr );
         fprintf( stderr, "Unable to resolve address.\n");
@@ -283,7 +283,7 @@ int main( int argc, char* argv[] )
 
         if( !inet_ntop( args.protocol_family, addr, ip_string, sizeof(ip_string) ) )
         {
-            console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+            console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
             fprintf( stderr, "ERROR: " );
             console_reset( stderr );
             fprintf( stderr, "Unable to convert network address to string. %s.", strerror(errno) );
@@ -341,7 +341,7 @@ bool address_resolve( const char* hostname, int* protocol_family, struct sockadd
     if( gai_status != 0 )
     {
         #if 0
-        console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+        console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
         fprintf( stderr, "ERROR: " );
         console_reset( stderr );
         fprintf( stderr, "%s.", gai_strerror(gai_status) );
@@ -407,7 +407,7 @@ bool port_scanning_task( int* percent, void* data )
 
     if( sock < 0 )
     {
-        console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+        console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
         printf( "\n" );
         fprintf( stderr, "ERROR: " );
         console_reset( stderr );
@@ -419,7 +419,7 @@ bool port_scanning_task( int* percent, void* data )
     int so_reuse_addr = 1;
     if( setsockopt( sock, SOL_SOCKET, SO_REUSEADDR, (void*) &so_reuse_addr, sizeof(so_reuse_addr) ) < 0 )
     {
-        console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+        console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
         printf( "\n" );
         fprintf( stderr, "ERROR: " );
         console_reset( stderr );
@@ -432,7 +432,7 @@ bool port_scanning_task( int* percent, void* data )
     int so_reuse_port = 1;
     if( setsockopt( sock, SOL_SOCKET, SO_REUSEPORT, (void*) &so_reuse_port, sizeof(so_reuse_port) ) < 0 )
     {
-        console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+        console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
         printf( "\n" );
         fprintf( stderr, "ERROR: " );
         console_reset( stderr );
@@ -449,7 +449,7 @@ bool port_scanning_task( int* percent, void* data )
     };
     if( setsockopt( sock, SOL_SOCKET, SO_RCVTIMEO, (void*) &so_receive_timeout, sizeof(so_receive_timeout) ) < 0 )
     {
-        console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+        console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
         printf( "\n" );
         fprintf( stderr, "ERROR: " );
         console_reset( stderr );
@@ -464,7 +464,7 @@ bool port_scanning_task( int* percent, void* data )
     };
     if( setsockopt( sock, SOL_SOCKET, SO_SNDTIMEO, (void*) &so_send_timeout, sizeof(so_send_timeout) ) < 0 )
     {
-        console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+        console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
         printf( "\n" );
         fprintf( stderr, "ERROR: " );
         console_reset( stderr );
@@ -493,7 +493,7 @@ bool port_scanning_task( int* percent, void* data )
     {
         if( errno != EINPROGRESS )
         {
-            console_fg_color_256( stderr, CONSOLE_COLOR256_RED );
+            console_fg_color_8( stderr, CONSOLE_COLOR8_RED );
             printf( "\n" );
             fprintf( stderr, "ERROR: " );
             console_reset( stderr );
