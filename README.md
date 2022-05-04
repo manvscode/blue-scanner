@@ -1,10 +1,7 @@
 ## blue-scanner
-
 A port scanner with attitude.
 
-----------
-
-[![YouTube Video](http://img.youtube.com/vi/Kxe0FcfpL0c/0.jpg)](https://youtu.be/Kxe0FcfpL0c)
+[![YouTube Video](images/blue-scanner.gif)](https://youtu.be/Kxe0FcfpL0c)
 
 ## Donate, if you found this software useful
 
